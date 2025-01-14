@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task List</title>
+  <link rel="stylesheet" href="{% static 'app/css/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Task List</h1>
+      <p>Stay organized and track your progress!</p>
+    </header>
+
+    <main>
+      <form class="task-input" method="POST" action="{% url 'add_task' %}">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Enter a new task">
+        <button type="submit">Add Task</button>
+      </form>
+
+      <!-- <ul class="task-list">
+        {% for task in tasks %}
+        <li class="{% if task.completed %}completed{% endif %}">
+          <span>{{ task.title }}</span>
+          <div>
+            <a href="{% url 'toggle_task' task.id %}" class="toggle-btn">
+              {% if task.completed %}Undo{% else %}Complete{% endif %}
+            </a>
+            <a href="{% url 'delete_task' task.id %}" class="delete-btn">Delete</a>
+          </div>
+        </li>
+        {% endfor %}
+      </ul> -->
+      <!-- post pagination -->
+       
+      <ul class="task-list">
+        {% for task in page_obj %}
+        <li class="{% if task.completed %}completed{% endif %}">
+          <span>{{ task.title }}</span>
+          <div>
+            <a href="{% url 'toggle_task' task.id %}" class="toggle-btn">
+              {% if task.completed %}Undo{% else %}Complete{% endif %}
+            </a>
+            <a href="{% url 'delete_task' task.id %}" class="delete-btn">Delete</a>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+      
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+      </div>
+      
+
+    </main>
+  </div>
+</body>
+
+<!-- <script>
+  // Add Task
+  $('#addTaskForm').submit(function (e) {
+    e.preventDefault();
+    const title = $('#taskInput').val().trim();
+    if (title) {
+      $.post("{% url 'add_task' %}", { title, csrfmiddlewaretoken: '{{ csrf_token }}' }, function (data) {
+        const newTask = `<li id="task-${data.id}">
+          <span>${data.title}</span>
+          <div>
+            <button onclick="toggleTask(${data.id})">Complete</button>
+            <button onclick="deleteTask(${data.id})">Delete</button>
+          </div>
+        </li>`;
+        $('#taskList').prepend(newTask);
+        $('#taskInput').val('');
+      });
+    }
+  });
+
+  // Delete Task
+  function deleteTask(taskId) {
+    $.post(`/delete/${taskId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' }, function () {
+      $(`#task-${taskId}`).remove();
+    });
+  }
+</script> -->
+
+</html>
