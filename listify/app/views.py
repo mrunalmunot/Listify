@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import Task
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 #Basic version
 # def task_list(request):
@@ -10,6 +11,7 @@ from django.http import JsonResponse
 #     return render(request, 'app/task_list.html', {'tasks': tasks})
 
 #Post pagination feature
+@login_required
 def task_list(request):
     tasks = Task.objects.order_by('-created_at')
     paginator = Paginator(tasks, 5)  # Show 5 tasks per page
@@ -25,6 +27,7 @@ def task_list(request):
 #     return redirect('task_list')
 
 # Ajax
+@login_required
 def add_task(request):
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
@@ -39,6 +42,7 @@ def add_task(request):
 #     return redirect('task_list')
 
 # Ajax
+@login_required
 def delete_task(request, task_id):
     if request.method == 'POST':
         task = get_object_or_404(Task, id=task_id)
@@ -46,6 +50,7 @@ def delete_task(request, task_id):
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@login_required
 def toggle_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.completed = not task.completed
