@@ -81,6 +81,20 @@ body {
     font-size: 16px;
   }
   
+  .toggle-btn {
+    background: #0cdb17;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .toggle-btn:hover {
+    background: #2bc053;
+  }
+
+
   .delete-btn {
     background: #e74c3c;
     color: #fff;
